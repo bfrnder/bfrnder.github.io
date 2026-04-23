@@ -1,388 +1,591 @@
 <!DOCTYPE html>
-<html lang="ru" class="scroll-smooth">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital Balance</title>
-    <!-- Подключаем Tailwind CSS для быстрого и красивого оформления -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Настройка базовых стилей -->
+    <title>Digital Detox | Перезагрузка</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --success: #43e97b;
+            --text-dark: #2d3748;
+            --glass-bg: rgba(255, 255, 255, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.6);
+            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        /* Анимированный градиентный фон */
         body {
-            font-family: 'Inter', sans-serif;
+            background: linear-gradient(-45deg, #a8edea, #fed6e3, #e0c3fc, #8ec5fc);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: var(--text-dark);
+            min-height: 100vh;
+            overflow-x: hidden;
         }
-        /* Плавное появление элементов */
-        .fade-in {
-            animation: fadeIn 0.5s ease-in-out;
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+
+        /* Элемент стрика в углу экрана */
+        .streak-badge {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: #ff6b6b;
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            border: 1px solid white;
+            transition: transform 0.3s ease;
+        }
+        .streak-badge:hover { transform: scale(1.05); }
+
+        header {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            max-width: 600px;
+            margin-bottom: 40px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .btn {
+            padding: 16px 45px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Glassmorphism Карточки */
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        .card:hover { transform: translateY(-5px); }
+
+        h2 {
+            margin-bottom: 25px;
+            font-size: 2.2rem;
+            color: var(--secondary);
+        }
+
+        /* Timer Section */
+        #timer-section { display: none; }
+        
+        .timer-display {
+            font-size: 6rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #2d3748, #4a5568);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 20px 0;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .motivational-phrase {
+            font-size: 1.4rem;
+            font-style: italic;
+            color: var(--secondary);
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        /* Tasks Section */
+        .task-list {
+            list-style: none;
+            text-align: left;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.6);
+            padding: 18px 25px;
+            margin-bottom: 12px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .task-item:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: scale(1.02);
+            border: 1px solid var(--glass-border);
+        }
+
+        .task-item input[type="checkbox"] {
+            margin-right: 20px;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            accent-color: var(--success);
+        }
+
+        .task-text {
+            font-size: 1.15rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .task-item.completed .task-text {
+            text-decoration: line-through;
+            color: #a0aec0;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 14px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 10px;
+            margin-bottom: 25px;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%);
+            width: 0%;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Generator Section */
+        .generator-box {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px dashed var(--secondary);
+        }
+
+        #activity-display {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Quiz Section */
+        .quiz-question { display: none; text-align: left; }
+        .quiz-question.active { display: block; animation: slideIn 0.5s forwards; }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .quiz-question h3 { margin-bottom: 25px; color: var(--text-dark); }
+
+        .quiz-options label {
+            display: block;
+            background: rgba(255, 255, 255, 0.6);
+            padding: 18px;
+            margin-bottom: 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .quiz-options label:hover {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--primary);
+        }
+
+        #quiz-result {
+            display: none;
+            font-size: 1.3rem;
+            font-weight: 700;
+            padding: 25px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid;
+            animation: slideIn 0.5s forwards;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #4a5568;
+            font-weight: 600;
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800">
+<body>
 
-    <!-- Навигация -->
-    <nav class="fixed w-full bg-white/80 backdrop-blur-md z-50 border-b border-slate-100">
-        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="text-xl font-bold text-indigo-600">Digital Balance</div>
-            <div class="hidden md:flex space-x-6">
-                <a href="#timer" class="text-slate-600 hover:text-indigo-600 transition">Таймер</a>
-                <a href="#test" class="text-slate-600 hover:text-indigo-600 transition">Тест</a>
-                <a href="#checklist" class="text-slate-600 hover:text-indigo-600 transition">Чеклист</a>
+    <!-- Стрик (Дни подряд) -->
+    <div class="streak-badge">
+        🔥 Стрик: <span id="streak-counter">0</span> дней
+    </div>
+
+    <!-- Главный экран -->
+    <header>
+        <h1>Офлайн — это новая роскошь</h1>
+        <p class="subtitle">Верни себе контроль над своим вниманием. Начни с одного часа без уведомлений и соцсетей.</p>
+        <button class="btn btn-primary" onclick="startDetox()">Начать детокс на 60 минут</button>
+    </header>
+
+    <div class="container">
+        
+        <!-- Таймер -->
+        <section id="timer-section" class="card">
+            <h2>Режим тишины</h2>
+            <p id="motivational-text" class="motivational-phrase">"Ты управляешь телефоном, а не он тобой."</p>
+            <div class="timer-display" id="timer">60:00</div>
+            <p style="font-weight: 600; color: #4a5568;">Переведи телефон в авиарежим или убери в другую комнату.</p>
+        </section>
+
+        <!-- Ежедневные задачи со стриками -->
+        <section class="card">
+            <h2>Ежедневные привычки 🎯</h2>
+            <p style="margin-bottom: 20px;">Выполни все задачи за день, чтобы не потерять свой стрик!</p>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="task-progress"></div>
             </div>
-        </div>
-    </nav>
+            <ul class="task-list" id="task-list">
+                <li class="task-item"><input type="checkbox" id="task1" onchange="updateTasks()"><span class="task-text">Не брать телефон в руки первый час после пробуждения</span></li>
+                <li class="task-item"><input type="checkbox" id="task2" onchange="updateTasks()"><span class="task-text">Прогулка 30 минут без музыки и подкастов</span></li>
+                <li class="task-item"><input type="checkbox" id="task3" onchange="updateTasks()"><span class="task-text">Написать от руки план на завтра или выписать мысли (журналинг)</span></li>
+                <li class="task-item"><input type="checkbox" id="task4" onchange="updateTasks()"><span class="task-text">Один прием пищи полностью без экранов</span></li>
+                <li class="task-item"><input type="checkbox" id="task5" onchange="updateTasks()"><span class="task-text">Выключить телефон за час до сна</span></li>
+            </ul>
+        </section>
 
-    <!-- 1. Главный экран (Hero-block) -->
-    <section id="hero" class="min-h-screen flex flex-col justify-center items-center text-center px-6 pt-20 bg-gradient-to-br from-indigo-50 to-white">
-        <div class="max-w-4xl mx-auto fade-in">
-            <!-- Крупный заголовок -->
-            <h1 class="text-5xl md:text-7xl font-bold tracking-tight text-slate-900 mb-6">
-                Твой путь к цифровой осознанности
-            </h1>
-            <p class="text-lg md:text-xl text-slate-500 mb-10 max-w-2xl mx-auto">
-                [Здесь можно добавить короткий подзаголовок о том, почему важен цифровой детокс]
-            </p>
-            <!-- Кнопка-якорь -->
-            <a href="#timer" class="inline-block bg-indigo-600 text-white px-8 py-4 rounded-full text-lg font-medium hover:bg-indigo-700 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-                Начать детокс
-            </a>
-        </div>
-    </section>
-
-    <!-- 2. Блок «Интерактивный Таймер» -->
-    <section id="timer" class="py-24 px-6 bg-white">
-        <div class="max-w-3xl mx-auto text-center">
-            <h2 class="text-3xl font-bold mb-4 text-slate-900">[Заголовок: Время для себя]</h2>
-            <p class="text-slate-500 mb-12">[Описание: Отложите телефон и уделите время реальному миру]</p>
-
-            <div class="bg-slate-50 rounded-3xl p-10 shadow-sm border border-slate-100">
-                <!-- Визуал: Крупные цифры -->
-                <div id="time-display" class="text-7xl md:text-9xl font-light tabular-nums tracking-tighter text-indigo-600 mb-8 transition-colors duration-500">
-                    60:00
-                </div>
-                
-                <!-- Функционал: Кнопка запуска -->
-                <button id="start-btn" class="bg-emerald-500 text-white px-8 py-4 rounded-2xl text-lg font-semibold hover:bg-emerald-600 transition-colors shadow-md shadow-emerald-500/20 mb-6">
-                    Запустить режим детокса
-                </button>
-
-                <!-- Текст (пустые отметки): Мотивационная фраза -->
-                <div class="h-12 flex items-center justify-center">
-                    <p id="motivation-text" class="text-slate-500 italic text-lg transition-opacity duration-300 opacity-50">
-                        [Здесь появится мотивационная фраза при запуске таймера]
-                    </p>
-                </div>
+        <!-- Генератор оффлайн-идей -->
+        <section class="card">
+            <h2>Чем заняться оффлайн? 🎲</h2>
+            <p style="margin-bottom: 20px;">Не знаешь куда деть руки без телефона? Жми кнопку!</p>
+            <div class="generator-box">
+                <div id="activity-display">Здесь появится классная идея...</div>
             </div>
-        </div>
-    </section>
+            <button class="btn btn-primary" onclick="generateActivity()">Сгенерировать идею</button>
+        </section>
 
-    <!-- 3. Блок «Экспресс-тест на зависимость» -->
-    <section id="test" class="py-24 px-6 bg-slate-50">
-        <div class="max-w-3xl mx-auto">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold mb-4 text-slate-900">[Заголовок: Узнай свой уровень зависимости]</h2>
-                <p class="text-slate-500">[Описание: Пройди короткий тест из 5 вопросов]</p>
-            </div>
-
-            <form id="quiz-form" class="space-y-6">
-                <!-- Вопрос 1 -->
-                <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-100">
-                    <h3 class="text-lg font-semibold mb-4 text-slate-800">1. [Текст первого вопроса. Например: Как часто вы проверяете соцсети?]</h3>
-                    <div class="space-y-3">
-                        <label class="flex items-center space-x-3 cursor-pointer p-3 rounded-lg hover:bg-slate-50 transition border border-transparent hover:border-slate-200">
-                            <input type="radio" name="q1" value="0" required class="w-5 h-5 text-indigo-600 focus:ring-indigo-500 border-slate-300">
-                            <span class="text-slate-700">[Вариант 1 - 0 баллов]</span>
-                        </label>
-                        <label class="flex items-center space-x-3 cursor-pointer p-3 rounded-lg hover:bg-slate-50 transition border border-transparent hover:border-slate-200">
-                            <input type="radio" name="q1" value="1" class="w-5 h-5 text-indigo-600 focus:ring-indigo-500 border-slate-300">
-                            <span class="text-slate-700">[Вариант 2 - 1 балл]</span>
-                        </label>
-                        <label class="flex items-center space-x-3 cursor-pointer p-3 rounded-lg hover:bg-slate-50 transition border border-transparent hover:border-slate-200">
-                            <input type="radio" name="q1" value="2" class="w-5 h-5 text-indigo-600 focus:ring-indigo-500 border-slate-300">
-                            <span class="text-slate-700">[Вариант 3 - 2 балла]</span>
-                        </label>
+        <!-- Тест -->
+        <section class="card">
+            <h2>Тест на цифровую зависимость 📱</h2>
+            <div id="quiz-container">
+                <!-- В 1 -->
+                <div class="quiz-question active" id="q1">
+                    <h3>1. Как часто вы берете телефон в руки "просто так", без цели?</h3>
+                    <div class="quiz-options">
+                        <label><input type="radio" name="q1" value="0"> Редко, у меня всегда есть дела</label>
+                        <label><input type="radio" name="q1" value="1"> Пару раз в день</label>
+                        <label><input type="radio" name="q1" value="2"> Постоянно, это уже рефлекс</label>
                     </div>
+                    <button class="btn btn-primary" onclick="nextQuestion(1)">Далее</button>
                 </div>
-
-                <!-- Вопрос 2 -->
-                <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-100">
-                    <h3 class="text-lg font-semibold mb-4 text-slate-800">2. [Текст второго вопроса]</h3>
-                    <div class="space-y-3">
-                        <label class="flex items-center space-x-3 cursor-pointer p-3 rounded-lg hover:bg-slate-50 transition"><input type="radio" name="q2" value="0" required class="w-5 h-5 text-indigo-600 border-slate-300"><span class="text-slate-700">[Вариант 1]</span></label>
-                        <label class="flex items-center space-x-3 cursor-pointer p-3 rounded-lg hover:bg-slate-50 transition"><input type="radio" name="q2" value="1" class="w-5 h-5 text-indigo-600 border-slate-300"><span class="text-slate-700">[Вариант 2]</span></label>
-                        <label class="flex items-center space-x-3 cursor-pointer p-3 rounded-lg hover:bg-slate-50 transition"><input type="radio" name="q2" value="2" class="w-5 h-5 text-indigo-600 border-slate-300"><span class="text-slate-700">[Вариант 3]</span></label>
+                <!-- В 2 -->
+                <div class="quiz-question" id="q2">
+                    <h3>2. Замечали ли вы, что смотрите видео или листаете ленту во время еды?</h3>
+                    <div class="quiz-options">
+                        <label><input type="radio" name="q2" value="0"> Никогда, еда — это святое</label>
+                        <label><input type="radio" name="q2" value="1"> Иногда, если ем в одиночестве</label>
+                        <label><input type="radio" name="q2" value="2"> Почти всегда, иначе мне скучно есть</label>
                     </div>
+                    <button class="btn btn-primary" onclick="nextQuestion(2)">Далее</button>
                 </div>
-
-                <!-- Вопрос 3 -->
-                <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-100">
-                    <h3 class="text-lg font-semibold mb-4 text-slate-800">3. [Текст третьего вопроса]</h3>
-                    <div class="space-y-3">
-                        <label class="flex items-center space-x-3 cursor-pointer p-3 rounded-lg hover:bg-slate-50 transition"><input type="radio" name="q3" value="0" required class="w-5 h-5 text-indigo-600 border-slate-300"><span class="text-slate-700">[Вариант 1]</span></label>
-                        <label class="flex items-center space-x-3 cursor-pointer p-3 rounded-lg hover:bg-slate-50 transition"><input type="radio" name="q3" value="1" class="w-5 h-5 text-indigo-600 border-slate-300"><span class="text-slate-700">[Вариант 2]</span></label>
-                        <label class="flex items-center space-x-3 cursor-pointer p-3 rounded-lg hover:bg-slate-50 transition"><input type="radio" name="q3" value="2" class="w-5 h-5 text-indigo-600 border-slate-300"><span class="text-slate-700">[Вариант 3]</span></label>
+                <!-- В 3 -->
+                <div class="quiz-question" id="q3">
+                    <h3>3. Что вы почувствуете, если случайно забудете телефон дома на весь день?</h3>
+                    <div class="quiz-options">
+                        <label><input type="radio" name="q3" value="0"> Отлично, побуду в тишине</label>
+                        <label><input type="radio" name="q3" value="1"> Легкое беспокойство по поводу работы/связи</label>
+                        <label><input type="radio" name="q3" value="2"> Панику, вернусь за ним с полпути</label>
                     </div>
+                    <button class="btn btn-primary" onclick="nextQuestion(3)">Далее</button>
                 </div>
-
-                <!-- Вопрос 4 -->
-                <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-100">
-                    <h3 class="text-lg font-semibold mb-4 text-slate-800">4. [Текст четвертого вопроса]</h3>
-                    <div class="space-y-3">
-                        <label class="flex items-center space-x-3 cursor-pointer p-3 rounded-lg hover:bg-slate-50 transition"><input type="radio" name="q4" value="0" required class="w-5 h-5 text-indigo-600 border-slate-300"><span class="text-slate-700">[Вариант 1]</span></label>
-                        <label class="flex items-center space-x-3 cursor-pointer p-3 rounded-lg hover:bg-slate-50 transition"><input type="radio" name="q4" value="1" class="w-5 h-5 text-indigo-600 border-slate-300"><span class="text-slate-700">[Вариант 2]</span></label>
-                        <label class="flex items-center space-x-3 cursor-pointer p-3 rounded-lg hover:bg-slate-50 transition"><input type="radio" name="q4" value="2" class="w-5 h-5 text-indigo-600 border-slate-300"><span class="text-slate-700">[Вариант 3]</span></label>
+                <!-- В 4 -->
+                <div class="quiz-question" id="q4">
+                    <h3>4. Бывает ли такое, что вы хотели зайти в приложение на 5 минут, а прошел час?</h3>
+                    <div class="quiz-options">
+                        <label><input type="radio" name="q4" value="0"> Почти никогда</label>
+                        <label><input type="radio" name="q4" value="1"> Изредка бывает</label>
+                        <label><input type="radio" name="q4" value="2"> Регулярно теряю счет времени</label>
                     </div>
+                    <button class="btn btn-primary" onclick="nextQuestion(4)">Далее</button>
                 </div>
-
-                <!-- Вопрос 5 -->
-                <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-100">
-                    <h3 class="text-lg font-semibold mb-4 text-slate-800">5. [Текст пятого вопроса]</h3>
-                    <div class="space-y-3">
-                        <label class="flex items-center space-x-3 cursor-pointer p-3 rounded-lg hover:bg-slate-50 transition"><input type="radio" name="q5" value="0" required class="w-5 h-5 text-indigo-600 border-slate-300"><span class="text-slate-700">[Вариант 1]</span></label>
-                        <label class="flex items-center space-x-3 cursor-pointer p-3 rounded-lg hover:bg-slate-50 transition"><input type="radio" name="q5" value="1" class="w-5 h-5 text-indigo-600 border-slate-300"><span class="text-slate-700">[Вариант 2]</span></label>
-                        <label class="flex items-center space-x-3 cursor-pointer p-3 rounded-lg hover:bg-slate-50 transition"><input type="radio" name="q5" value="2" class="w-5 h-5 text-indigo-600 border-slate-300"><span class="text-slate-700">[Вариант 3]</span></label>
+                <!-- В 5 -->
+                <div class="quiz-question" id="q5">
+                    <h3>5. Как проходит ваш вечер перед сном?</h3>
+                    <div class="quiz-options">
+                        <label><input type="radio" name="q5" value="0"> Читаю, общаюсь, готовлюсь ко сну без экранов</label>
+                        <label><input type="radio" name="q5" value="1"> Смотрю телевизор/сериал</label>
+                        <label><input type="radio" name="q5" value="2"> Лежу в кровати и листаю соцсети до упора</label>
                     </div>
-                </div>
-
-                <button type="submit" class="w-full bg-indigo-600 text-white px-8 py-4 rounded-2xl text-lg font-medium hover:bg-indigo-700 transition-colors shadow-md shadow-indigo-600/20">
-                    Узнать результат
-                </button>
-            </form>
-
-            <!-- Блок результатов (скрыт по умолчанию) -->
-            <div id="result-block" class="hidden mt-8 p-8 bg-indigo-50 border border-indigo-100 rounded-2xl text-center fade-in">
-                <p class="text-sm uppercase tracking-wider font-semibold text-indigo-600 mb-2">Ваш результат</p>
-                <h3 class="text-4xl font-bold text-slate-900 mb-4"><span id="score-display">0</span> баллов</h3>
-                <p id="verdict-text" class="text-lg text-slate-700">
-                    [Здесь появится вердикт в зависимости от набранных баллов]
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <!-- 4. Блок «Интерактивный чеклист» -->
-    <section id="checklist" class="py-24 px-6 bg-white">
-        <div class="max-w-5xl mx-auto">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold mb-4 text-slate-900">[Заголовок: Чеклист на день]</h2>
-                <p class="text-slate-500">[Описание: Выполняй эти простые шаги и отмечай прогресс]</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Карточка 1 -->
-                <div class="task-card group cursor-pointer bg-white border-2 border-slate-100 rounded-2xl p-6 transition-all duration-300 hover:border-indigo-200 hover:shadow-md">
-                    <div class="flex items-start gap-4">
-                        <div class="mt-1 flex-shrink-0">
-                            <div class="w-6 h-6 rounded border-2 border-slate-300 flex items-center justify-center group-hover:border-indigo-400 transition-colors check-icon-container">
-                                <!-- Иконка галочки (скрыта по умолчанию) -->
-                                <svg class="w-4 h-4 text-white opacity-0 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
-                            </div>
-                        </div>
-                        <div>
-                            <h3 class="task-title font-semibold text-lg text-slate-800 transition-colors">[Заголовок задачи 1]</h3>
-                            <p class="task-desc text-slate-500 text-sm mt-2 transition-colors">[Описание задачи: что конкретно нужно сделать]</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Карточка 2 -->
-                <div class="task-card group cursor-pointer bg-white border-2 border-slate-100 rounded-2xl p-6 transition-all duration-300 hover:border-indigo-200 hover:shadow-md">
-                    <div class="flex items-start gap-4">
-                        <div class="mt-1 flex-shrink-0">
-                            <div class="w-6 h-6 rounded border-2 border-slate-300 flex items-center justify-center group-hover:border-indigo-400 transition-colors check-icon-container">
-                                <svg class="w-4 h-4 text-white opacity-0 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
-                            </div>
-                        </div>
-                        <div>
-                            <h3 class="task-title font-semibold text-lg text-slate-800 transition-colors">[Заголовок задачи 2]</h3>
-                            <p class="task-desc text-slate-500 text-sm mt-2 transition-colors">[Описание задачи...]</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Карточка 3 -->
-                <div class="task-card group cursor-pointer bg-white border-2 border-slate-100 rounded-2xl p-6 transition-all duration-300 hover:border-indigo-200 hover:shadow-md">
-                    <div class="flex items-start gap-4">
-                        <div class="mt-1 flex-shrink-0">
-                            <div class="w-6 h-6 rounded border-2 border-slate-300 flex items-center justify-center group-hover:border-indigo-400 transition-colors check-icon-container">
-                                <svg class="w-4 h-4 text-white opacity-0 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
-                            </div>
-                        </div>
-                        <div>
-                            <h3 class="task-title font-semibold text-lg text-slate-800 transition-colors">[Заголовок задачи 3]</h3>
-                            <p class="task-desc text-slate-500 text-sm mt-2 transition-colors">[Описание задачи...]</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Карточка 4 -->
-                <div class="task-card group cursor-pointer bg-white border-2 border-slate-100 rounded-2xl p-6 transition-all duration-300 hover:border-indigo-200 hover:shadow-md">
-                    <div class="flex items-start gap-4">
-                        <div class="mt-1 flex-shrink-0">
-                            <div class="w-6 h-6 rounded border-2 border-slate-300 flex items-center justify-center group-hover:border-indigo-400 transition-colors check-icon-container">
-                                <svg class="w-4 h-4 text-white opacity-0 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
-                            </div>
-                        </div>
-                        <div>
-                            <h3 class="task-title font-semibold text-lg text-slate-800 transition-colors">[Заголовок задачи 4]</h3>
-                            <p class="task-desc text-slate-500 text-sm mt-2 transition-colors">[Описание задачи...]</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Карточка 5 -->
-                <div class="task-card group cursor-pointer bg-white border-2 border-slate-100 rounded-2xl p-6 transition-all duration-300 hover:border-indigo-200 hover:shadow-md">
-                    <div class="flex items-start gap-4">
-                        <div class="mt-1 flex-shrink-0">
-                            <div class="w-6 h-6 rounded border-2 border-slate-300 flex items-center justify-center group-hover:border-indigo-400 transition-colors check-icon-container">
-                                <svg class="w-4 h-4 text-white opacity-0 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
-                            </div>
-                        </div>
-                        <div>
-                            <h3 class="task-title font-semibold text-lg text-slate-800 transition-colors">[Заголовок задачи 5]</h3>
-                            <p class="task-desc text-slate-500 text-sm mt-2 transition-colors">[Описание задачи...]</p>
-                        </div>
-                    </div>
+                    <button class="btn btn-primary" onclick="finishQuiz()">Узнать результат</button>
                 </div>
             </div>
-        </div>
-    </section>
+            <div id="quiz-result"></div>
+        </section>
 
-    <!-- Подвал -->
-    <footer class="bg-slate-900 text-slate-400 py-8 text-center">
-        <p>© 2024 Digital Balance. [Здесь копирайт или доп. информация]</p>
+    </div>
+
+    <footer>
+        <p>© 2026 Продукт "Digital Detox". Твое внимание принадлежит тебе. Сделано с любовью, в рамках проекта "Крутой сайт" by BFRND. </p>
     </footer>
 
-    <!-- Скрипты для интерактивности -->
     <script>
-        // --- 1. Логика Таймера ---
+        // --- 1. Таймер ---
         let timerInterval;
-        let timeRemaining = 60 * 60; // 60 минут в секундах
-        const timeDisplay = document.getElementById('time-display');
-        const startBtn = document.getElementById('start-btn');
-        const motivationText = document.getElementById('motivation-text');
+        function startDetox() {
+            const timerSection = document.getElementById('timer-section');
+            timerSection.style.display = 'block';
+            timerSection.scrollIntoView({ behavior: 'smooth' });
 
-        // Функция форматирования времени (ММ:СС)
-        function formatTime(seconds) {
-            const m = Math.floor(seconds / 60).toString().padStart(2, '0');
-            const s = (seconds % 60).toString().padStart(2, '0');
-            return `${m}:${s}`;
-        }
+            setTimeout(() => { document.getElementById('motivational-text').style.opacity = '1'; }, 500);
 
-        startBtn.addEventListener('click', () => {
-            if (timerInterval) return; // Защита от двойного клика
-
-            // Меняем UI при старте
-            startBtn.classList.add('opacity-50', 'cursor-not-allowed');
-            startBtn.textContent = 'Детокс запущен...';
-            timeDisplay.classList.remove('text-indigo-600');
-            timeDisplay.classList.add('text-emerald-500');
+            let timePassed = 0;
+            const TIME_LIMIT = 3600; 
             
-            // Показываем мотивационную фразу
-            motivationText.classList.remove('opacity-50');
-            motivationText.textContent = "[Твоя крутая мотивационная фраза: Ты молодец, что решил отдохнуть!]";
-
-            // Запускаем отсчет
+            clearInterval(timerInterval);
+            
             timerInterval = setInterval(() => {
-                timeRemaining--;
-                timeDisplay.textContent = formatTime(timeRemaining);
+                timePassed++;
+                let timeLeft = TIME_LIMIT - timePassed;
+                
+                let minutes = Math.floor(timeLeft / 60);
+                let seconds = timeLeft % 60;
+                
+                if(minutes < 10) minutes = `0${minutes}`;
+                if(seconds < 10) seconds = `0${seconds}`;
+                
+                document.getElementById('timer').innerText = `${minutes}:${seconds}`;
 
-                if (timeRemaining <= 0) {
+                if (timeLeft <= 0) {
                     clearInterval(timerInterval);
-                    timerInterval = null;
-                    timeDisplay.textContent = "00:00";
-                    motivationText.textContent = "[Отлично! Сеанс цифрового детокса завершён.]";
-                    startBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                    startBtn.textContent = 'Запустить заново';
-                    timeRemaining = 60 * 60; // Сброс времени
+                    document.getElementById('timer').innerText = "00:00";
+                    document.getElementById('motivational-text').innerText = "Вы супер! Выдержали час без телефона.";
                 }
             }, 1000);
-        });
+        }
 
-        // --- 2. Логика Теста ---
-        const quizForm = document.getElementById('quiz-form');
-        const resultBlock = document.getElementById('result-block');
-        const scoreDisplay = document.getElementById('score-display');
-        const verdictText = document.getElementById('verdict-text');
+        // --- 2. Генератор идей ---
+        const activities =[
+            "🧘‍♀️ Сделай 10-минутную растяжку всего тела",
+            "🧹 Наведи порядок в одном ящике стола или шкафа",
+            "🪴 Полей растения и протри их листья",
+            "🎨 Нарисуй что-нибудь ручкой на листке бумаги",
+            "☕ Завари вкусный чай и выпей его в полной тишине",
+            "🧩 Собери пазл или конструктор",
+            "📝 Напиши 3 вещи, за которые ты благодарен сегодня",
+            "🚶‍♂️ Выйди на короткую прогулку без наушников",
+            "📖 Почитай 20 страниц бумажной книги",
+            "🛌 Просто закрой глаза и полежи в тишине 10 минут"
+        ];
 
-        quizForm.addEventListener('submit', (e) => {
-            e.preventDefault(); // Предотвращаем перезагрузку страницы
+        function generateActivity() {
+            const display = document.getElementById('activity-display');
+            display.style.opacity = 0; // Для плавной анимации
+            setTimeout(() => {
+                const randomIndex = Math.floor(Math.random() * activities.length);
+                display.innerText = activities[randomIndex];
+                display.style.opacity = 1;
+            }, 300);
+            display.style.transition = "opacity 0.3s ease";
+        }
+
+        // --- 3. Логика задач и Стриков (Дней подряд) ---
+        function loadTasksAndStreak() {
+            let today = new Date().toDateString();
+            let savedDate = localStorage.getItem('taskDate');
             
-            let totalScore = 0;
-            const formData = new FormData(quizForm);
-            
-            // Считаем сумму баллов
-            for (let value of formData.values()) {
-                totalScore += parseInt(value);
-            }
-
-            scoreDisplay.textContent = totalScore;
-            resultBlock.classList.remove('hidden');
-
-            // Подставляем вердикт в зависимости от баллов (можно настроить диапазоны)
-            if (totalScore <= 3) {
-                verdictText.textContent = "[Текст: У вас отличный цифровой баланс! Зависимость минимальна.]";
-                resultBlock.className = "mt-8 p-8 bg-emerald-50 border border-emerald-100 rounded-2xl text-center fade-in";
-                verdictText.className = "text-lg text-emerald-800";
-            } else if (totalScore <= 7) {
-                verdictText.textContent = "[Текст: Средний уровень. Иногда стоит откладывать телефон подальше.]";
-                resultBlock.className = "mt-8 p-8 bg-amber-50 border border-amber-100 rounded-2xl text-center fade-in";
-                verdictText.className = "text-lg text-amber-800";
+            // Если наступил новый день, сбрасываем галочки
+            if (savedDate !== today) {
+                for(let i = 1; i <= 5; i++) localStorage.removeItem('task' + i);
+                localStorage.setItem('taskDate', today);
             } else {
-                verdictText.textContent = "[Текст: Высокий уровень зависимости. Вам срочно нужен цифровой детокс!]";
-                resultBlock.className = "mt-8 p-8 bg-rose-50 border border-rose-100 rounded-2xl text-center fade-in";
-                verdictText.className = "text-lg text-rose-800";
-            }
-            
-            // Скроллим к результату
-            resultBlock.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        });
-
-        // --- 3. Логика Чеклиста ---
-        const taskCards = document.querySelectorAll('.task-card');
-
-        taskCards.forEach(card => {
-            card.addEventListener('click', function() {
-                const isCompleted = this.classList.contains('opacity-60');
-                
-                const iconContainer = this.querySelector('.check-icon-container');
-                const svg = this.querySelector('svg');
-                const title = this.querySelector('.task-title');
-                const desc = this.querySelector('.task-desc');
-
-                if (!isCompleted) {
-                    // Отмечаем как выполненное
-                    this.classList.add('opacity-60', 'bg-slate-50', 'border-transparent');
-                    this.classList.remove('border-slate-100', 'hover:border-indigo-200', 'hover:shadow-md');
-                    
-                    iconContainer.classList.remove('border-slate-300', 'group-hover:border-indigo-400');
-                    iconContainer.classList.add('bg-emerald-500', 'border-emerald-500');
-                    svg.classList.remove('opacity-0');
-                    
-                    title.classList.add('line-through', 'text-slate-400');
-                    title.classList.remove('text-slate-800');
-                    desc.classList.add('line-through', 'text-slate-400');
-                    desc.classList.remove('text-slate-500');
-                } else {
-                    // Снимаем отметку
-                    this.classList.remove('opacity-60', 'bg-slate-50', 'border-transparent');
-                    this.classList.add('border-slate-100', 'hover:border-indigo-200', 'hover:shadow-md');
-                    
-                    iconContainer.classList.add('border-slate-300', 'group-hover:border-indigo-400');
-                    iconContainer.classList.remove('bg-emerald-500', 'border-emerald-500');
-                    svg.classList.add('opacity-0');
-                    
-                    title.classList.remove('line-through', 'text-slate-400');
-                    title.classList.add('text-slate-800');
-                    desc.classList.remove('line-through', 'text-slate-400');
-                    desc.classList.add('text-slate-500');
+                // Восстанавливаем галочки
+                for(let i = 1; i <= 5; i++) {
+                    if (localStorage.getItem('task' + i) === 'true') {
+                        document.getElementById('task' + i).checked = true;
+                        document.getElementById('task' + i).parentElement.classList.add('completed');
+                    }
                 }
-            });
-        });
+            }
+            updateProgressOnly();
+            updateStreakDisplay();
+        }
+
+        function updateTasks() {
+            let allChecked = true;
+            for(let i = 1; i <= 5; i++) {
+                let cb = document.getElementById('task' + i);
+                localStorage.setItem('task' + i, cb.checked);
+                if (cb.checked) {
+                    cb.parentElement.classList.add('completed');
+                } else {
+                    cb.parentElement.classList.remove('completed');
+                    allChecked = false;
+                }
+            }
+            updateProgressOnly();
+
+            // Логика добавления стрика
+            if (allChecked) {
+                let today = new Date().toDateString();
+                let lastDetoxDate = localStorage.getItem('lastDetoxDate');
+
+                // Если сегодня стрик еще не засчитан
+                if (lastDetoxDate !== today) {
+                    let streak = parseInt(localStorage.getItem('detoxStreak')) || 0;
+                    
+                    let yesterday = new Date();
+                    yesterday.setDate(yesterday.getDate() - 1);
+
+                    // Проверка на непрерывность
+                    if (lastDetoxDate === yesterday.toDateString()) {
+                        streak++;
+                    } else {
+                        streak = 1; // Если пропустил день, стрик начинается заново
+                    }
+
+                    localStorage.setItem('detoxStreak', streak);
+                    localStorage.setItem('lastDetoxDate', today);
+                    updateStreakDisplay();
+                    
+                    // Небольшой салют/поздравление
+                    setTimeout(() => alert("🎉 Поздравляем! Все задачи на сегодня выполнены. Твой стрик вырос!"), 300);
+                }
+            }
+        }
+
+        function updateProgressOnly() {
+            const allTasks = 5;
+            const completedTasks = document.querySelectorAll('.task-item input[type="checkbox"]:checked').length;
+            const progress = (completedTasks / allTasks) * 100;
+            document.getElementById('task-progress').style.width = `${progress}%`;
+        }
+
+        function updateStreakDisplay() {
+            let streak = localStorage.getItem('detoxStreak') || 0;
+            // Проверка, не слетел ли стрик (если человек не заходил больше 1 дня)
+            let lastDetoxDate = localStorage.getItem('lastDetoxDate');
+            if (lastDetoxDate) {
+                let today = new Date();
+                let lastDate = new Date(lastDetoxDate);
+                let diffTime = Math.abs(today - lastDate);
+                let diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                if (diffDays > 1) {
+                    streak = 0; // Сбрасываем визуально, если пропуск
+                    localStorage.setItem('detoxStreak', 0);
+                }
+            }
+            document.getElementById('streak-counter').innerText = streak;
+        }
+
+        // --- 4. Тест ---
+        let quizScore = 0;
+
+        function nextQuestion(currentQ) {
+            const selectedOption = document.querySelector(`input[name="q${currentQ}"]:checked`);
+            if (!selectedOption) return alert("Выберите вариант ответа.");
+
+            quizScore += parseInt(selectedOption.value);
+            document.getElementById(`q${currentQ}`).classList.remove('active');
+            document.getElementById(`q${currentQ + 1}`).classList.add('active');
+        }
+
+        function finishQuiz() {
+            const selectedOption = document.querySelector(`input[name="q5"]:checked`);
+            if (!selectedOption) return alert("Выберите вариант ответа.");
+            
+            quizScore += parseInt(selectedOption.value);
+            document.getElementById('q5').classList.remove('active');
+            
+            const resultContainer = document.getElementById('quiz-result');
+            resultContainer.style.display = 'block';
+
+            if (quizScore <= 3) {
+                resultContainer.innerHTML = "🌟 Уровень: Свободный человек!<br>Вы контролируете гаджеты, а не они вас.";
+                resultContainer.style.borderColor = "#43e97b";
+                resultContainer.style.color = "#2d3748";
+            } else if (quizScore <= 7) {
+                resultContainer.innerHTML = "⚠️ Уровень: Начинающаяся зависимость.<br>Соцсети съедают часть времени. Пора начать делать 1 час детокса в день!";
+                resultContainer.style.borderColor = "#f6d365";
+                resultContainer.style.color = "#2d3748";
+            } else {
+                resultContainer.innerHTML = "🚨 Уровень: Высокая зависимость.<br>Телефон стал продолжением руки. Срочно жмите на старт таймера наверху!";
+                resultContainer.style.borderColor = "#ff6b6b";
+                resultContainer.style.color = "#ff6b6b";
+            }
+        }
+
+        // Запуск при загрузке
+        window.onload = loadTasksAndStreak;
     </script>
 </body>
 </html>
